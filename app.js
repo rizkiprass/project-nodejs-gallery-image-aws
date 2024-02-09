@@ -1,15 +1,19 @@
 const express = require('express');
-const cors = require('cors');
 const uploadRoute = require('./routes/uploadRoute');
-
+const imageRoutes = require('./routes/imageRoutes');
 const app = express();
 const port = 8080;
+const cors = require('cors'); // Impor cors
 
-// Allow requests from all origins
+// Middleware to parse JSON bodies
+app.use(express.json());
+// Gunakan middleware cors
 app.use(cors());
 
-// Middleware
+
+// Routes
 app.use('/upload', uploadRoute);
+app.use('/', imageRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
