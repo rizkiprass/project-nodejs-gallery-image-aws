@@ -1,0 +1,23 @@
+# Ignore node_modules directory as dependencies will be installed separately
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv environment variables file
+.env
+
+# Compiled binary addons
+build/Release
+
+# OS or editor temporary files
+.DS_Store
+Thumbs.db
