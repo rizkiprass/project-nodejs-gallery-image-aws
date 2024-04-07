@@ -13,7 +13,7 @@ app.use(cors());
 
 // Routes
 app.use('/upload', uploadRoute);
-app.use('/', imageRoutes);
+// app.use('/', imageRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
