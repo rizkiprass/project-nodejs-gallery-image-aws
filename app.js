@@ -2,7 +2,7 @@ const express = require('express');
 const uploadRoute = require('./routes/uploadRoute');
 const imageRoutes = require('./routes/imageRoutes');
 const app = express();
-const port = 8080;
+const port = 8081;
 const cors = require('cors'); // Impor cors
 
 // Middleware to parse JSON bodies
