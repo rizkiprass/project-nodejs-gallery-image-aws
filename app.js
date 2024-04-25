@@ -5,6 +5,12 @@ const app = express();
 const port = 8081;
 const cors = require('cors'); // Impor cors
 
+console.log(process.env.AWS_ACCESS_KEY_ID);
+console.log(process.env.AWS_SECRET_ACCESS_KEY);
+console.log(process.env.AWS_REGION);
+
+
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 // Gunakan middleware cors
