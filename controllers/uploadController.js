@@ -17,9 +17,14 @@ exports.uploadImage = async (req, res) => {
     try {
         await s3Client.send(new PutObjectCommand(params));
 
-        // Generate S3 URL for the uploaded image
-        const imageUrl = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${file.originalname}`;
-
+        // Generate S3 URL for the uploaded image based on the environment
+        let imageUrl;
+        if (process.env.NODE_ENV === 'production') {
+            imageUrl = `https://${process.env.S3_BUCKET_PROD}.s3.amazonaws.com/${file.originalname}`;
+        } else {
+            imageUrl = `https://localhost:9000/${process.env.S3_BUCKET_DEV}/${file.originalname}`;
+        }
+        
         // Save metadata to MySQL database
         const imageMetadata = {
             name: file.originalname,
