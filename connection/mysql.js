@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'app',
     password: 'Admin123',
-    database: 'images'
+    database: 'imagesdb'
 });
 
 db.connect((err) => {
