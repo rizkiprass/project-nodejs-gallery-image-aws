@@ -1,8 +1,7 @@
 # project-gallery-image-aws
 
-1. create .env
+1. create .env then copy .env.example to it
 
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_REGION=us-east-1
-S3_BUCKET=
+use uploadController-2.js for upload to s3 only
+use uploadController.js for upload to s3 and save metadata to mysql db
+
