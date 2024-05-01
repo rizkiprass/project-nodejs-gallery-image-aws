@@ -7,7 +7,7 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - D:\minio\data:/data
+      - C:\Users\Pras\OneDrive\My-Project\Gallery\minio\data:/data #change to your path folder
     environment:
       MINIO_ROOT_USER: "ROOTUSER"
       MINIO_ROOT_PASSWORD: "CHANGEME123"
