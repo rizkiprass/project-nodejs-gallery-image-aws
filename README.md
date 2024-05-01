@@ -1,3 +1,8 @@
+Feature on this branch:
+- S3
+- mysql
+
+
 # project-gallery-image-aws
 
 1. create .env then copy .env.example to it
