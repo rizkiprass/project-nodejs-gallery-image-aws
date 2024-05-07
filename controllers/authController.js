@@ -21,7 +21,7 @@ exports.login = (req, res) => {
         const user = results[0];
         try {
             if (await bcrypt.compare(password, user.password)) {
-                const accessToken = jwt.sign({ username: user.username }, process.env.JWT_SECRET);
+                const accessToken = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
                 return res.json({ accessToken });
             } else {
                 return res.status(401).send('Invalid username or password');
@@ -62,7 +62,8 @@ exports.register = (req, res) => {
                     return res.status(500).send('Internal Server Error');
                 }
                 console.log('User registered successfully');
-                const accessToken = jwt.sign({ username }, process.env.JWT_SECRET);
+                const accessToken = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
+
                 return res.json({ accessToken });
             });
         } catch (error) {
