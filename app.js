@@ -14,13 +14,16 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use('/upload', authenticateToken, uploadRoute);
-app.use('/images', authenticateToken, imageRoutes); // Mount the image routes
+// app.use('/upload', authenticateToken, uploadRoute);
+// app.use('/images', authenticateToken, imageRoutes); // Mount the image routes
 // app.use('/login', authController);
 // app.use('/register', authController);
 // app.use('/login', authRoutes);
 // app.use('/register', authRoutes);
 app.use('/auth', authRoutes);
+
+app.use('/upload', uploadRoute);
+app.use('/images', imageRoutes); // Mount the image routes
 
 
 app.listen(port, () => {
