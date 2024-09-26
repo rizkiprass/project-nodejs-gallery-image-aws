@@ -14,7 +14,7 @@ services:
     command: server /data --console-address ":9001"
 
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: "rootpassword"
     volumes:
