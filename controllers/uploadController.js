@@ -23,16 +23,17 @@ exports.uploadImage = async (req, res) => {
         Bucket: process.env.S3_BUCKET,
         Key: file.originalname,
         Body: file.buffer,
-        ContentType: contentType  // Set the content type
+        ContentType: contentType,  // Set the content type
+        // ACL: 'public-read'         // Set the ACL to public-read
     };
 
     try {
         await s3Client.send(new PutObjectCommand(params));
 
-        // Generate S3 URL for the uploaded image based on the environment
+        // Generate S3 URL for the uploaded image based on the environment, production env using AWS S3 bucket, development env using minio local
         let imageUrl;
         if (process.env.NODE_ENV === 'production') {
-            imageUrl = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${file.originalname}`;
+            imageUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${file.originalname}`;
         } else {
             imageUrl = `http://localhost:9000/${process.env.S3_BUCKET}/${file.originalname}`;
         }
@@ -55,7 +56,7 @@ exports.uploadImage = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Error uploading file to S3');
+        console.error('Error uploading file to S3:', err);
+        res.status(500).send(`Error uploading file to S3: ${err.message}`);
     }
 };
