@@ -34,7 +34,7 @@ exports.getImages = async (req, res) => {
                 }
 
                 // Simpan hasil query ke Redis cache, dengan TTL 1 jam (3600 detik)
-                redisClient.setEx('images', 3600, JSON.stringify(results));
+                redisClient.setEx('images', 60, JSON.stringify(results));
 
                 // Kirim data dari MySQL ke client
                 console.log('Mengambil data dari MySQL dan menyimpannya di Redis cache');
