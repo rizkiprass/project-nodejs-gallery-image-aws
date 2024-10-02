@@ -2,7 +2,6 @@ const express = require('express');
 const uploadRoute = require('./routes/uploadRoute');
 const imageRoutes = require('./routes/imageRoutes');
 const authRoutes = require('./routes/authRoutes');
-const deleteRoute = require('./routes/deleteRoutes'); // Import delete route
 const app = express();
 const port = 8081;
 const cors = require('cors'); // Impor cors
@@ -21,12 +20,10 @@ app.use(cors());
 // app.use('/register', authController);
 // app.use('/login', authRoutes);
 // app.use('/register', authRoutes);
-// app.use('/delete', authenticateToken, deleteRoute); // Mount the delete routes
 app.use('/auth', authRoutes);
 
 app.use('/upload', uploadRoute);
 app.use('/images', imageRoutes); // Mount the image routes
-app.use('/delete', deleteRoute); // Mount the delete routes
 
 
 app.listen(port, () => {
