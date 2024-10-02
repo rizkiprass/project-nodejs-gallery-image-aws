@@ -7,31 +7,29 @@ require('dotenv').config();
 exports.uploadImage = async (req, res) => {
     const file = req.file;
 
-    // Determine the content type based on the file extension
+    // Tentukan content type berdasarkan ekstensi file
     let contentType;
     if (file.originalname.endsWith('.jpg') || file.originalname.endsWith('.jpeg')) {
         contentType = 'image/jpeg';
     } else if (file.originalname.endsWith('.png')) {
         contentType = 'image/png';
     } else {
-        // Handle unsupported file types if needed
         res.status(400).send('Unsupported file type');
         return;
     }
 
-    // Upload file to S3 with specified content type
+    // Upload file ke S3
     const params = {
         Bucket: process.env.S3_BUCKET,
         Key: file.originalname,
         Body: file.buffer,
-        ContentType: contentType,  // Set the content type
-        // ACL: 'public-read'         // Set the ACL to public-read
+        ContentType: contentType,
     };
 
     try {
         await s3Client.send(new PutObjectCommand(params));
 
-        // Generate S3 URL for the uploaded image based on the environment, production env using AWS S3 bucket, development env using minio local
+        // Generate S3 URL
         let imageUrl;
         if (process.env.NODE_ENV === 'production') {
             imageUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${file.originalname}`;
@@ -39,23 +37,30 @@ exports.uploadImage = async (req, res) => {
             imageUrl = `http://localhost:9000/${process.env.S3_BUCKET}/${file.originalname}`;
         }
 
-        // Save metadata to MySQL database
+        // Simpan metadata gambar ke MySQL
         const imageMetadata = {
             name: file.originalname,
             url: imageUrl,
-            // Add any additional metadata fields as needed
         };
 
         const query = 'INSERT INTO images SET ?';
-        db.query(query, imageMetadata, (err, result) => {
+        db.query(query, imageMetadata, async (err, result) => {
             if (err) {
                 console.error('Error saving image metadata to database:', err);
                 res.status(500).send('Error saving image metadata to database');
             } else {
                 console.log('Image metadata saved to database:', result);
 
-                // // Save image metadata to Redis
-                // redisClient.set(file.originalname, JSON.stringify(imageMetadata)); // Store the image metadata in Redis
+                // Ambil data terbaru dari MySQL setelah berhasil upload
+                db.query('SELECT * FROM images', async (err, images) => {
+                    if (err) {
+                        console.error('Error retrieving images from database:', err);
+                    } else {
+                        // Perbarui cache Redis dengan data terbaru
+                        await redisClient.setEx('images', 20, JSON.stringify(images)); // 3600 detik (1 jam)
+                        console.log('Cache images diperbarui di Redis');
+                    }
+                });
 
                 res.send('File uploaded successfully');
             }

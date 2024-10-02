@@ -1,6 +1,7 @@
 const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../config/aws-config');
 const { db } = require('../connection/mysql');
+const redisClient = require('../connection/redis'); // Import redisClient
 require('dotenv').config();
 
 exports.deleteImage = async (req, res) => {
@@ -19,14 +20,17 @@ exports.deleteImage = async (req, res) => {
 
         // Hapus metadata gambar dari MySQL
         const query = 'DELETE FROM images WHERE name = ?';
-        db.query(query, [imageName], (err, result) => {
+        db.query(query, [imageName], async (err, result) => {
             if (err) {
                 console.error('Error deleting image metadata from database:', err);
                 res.status(500).send('Error deleting image metadata from database');
             } else {
                 console.log('Image metadata deleted from database:', result);
 
-                
+                // Hapus cache Redis untuk data gambar
+                await redisClient.del('images');
+                console.log('Redis cache for images deleted');
+
                 res.send(`File ${imageName} deleted successfully`);
             }
         });
