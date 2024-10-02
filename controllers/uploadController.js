@@ -1,5 +1,6 @@
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../config/aws-config');
+const redisClient = require('../connection/redis'); // Import redis client
 const { db } = require('../connection/mysql');
 require('dotenv').config();
 
@@ -52,6 +53,10 @@ exports.uploadImage = async (req, res) => {
                 res.status(500).send('Error saving image metadata to database');
             } else {
                 console.log('Image metadata saved to database:', result);
+
+                // // Save image metadata to Redis
+                // redisClient.set(file.originalname, JSON.stringify(imageMetadata)); // Store the image metadata in Redis
+
                 res.send('File uploaded successfully');
             }
         });

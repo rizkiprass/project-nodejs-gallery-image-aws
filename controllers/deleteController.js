@@ -25,6 +25,8 @@ exports.deleteImage = async (req, res) => {
                 res.status(500).send('Error deleting image metadata from database');
             } else {
                 console.log('Image metadata deleted from database:', result);
+
+                
                 res.send(`File ${imageName} deleted successfully`);
             }
         });
